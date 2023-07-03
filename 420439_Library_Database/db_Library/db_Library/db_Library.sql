@@ -173,6 +173,15 @@ create table db_Library.dbo.Users(
 	[ReaderId] int unique not null constraint [FK_Users_People] Foreign Key References [dbo].[People]([PersonId])
 )
 
+create table db_Library.dbo.ReserveBookCopies(
+	[ReserveId] int not null Identity(1,1),
+	[ISBN] varchar(100) not null Constraint [FK_ReserveBookCopies_BookCopies] Foreign Key References [dbo].[BookCopies]([ISBN]),
+	[StaffId] int not null constraint [FK_ReserveBookCopies_Staffs] foreign key References [dbo].[Staffs]([StaffId]),
+	[ReaderId] int not null constraint [FK_ReserveBookCopies_Readers] foreign key References [dbo].[Readers]([ReaderId]),
+	[ReserveDateTime] datetime not null,
+	Constraint [PK_ReserveBookCopies] Primary Key ([ReserveId])
+)
+
 create table db_Library.dbo.BorrowBookCopies(
 	[BorrowId] int not null identity(1,1),
 	[ISBN] varchar(100) not null Constraint [FK_BorrowBookCopies_BookCopies] Foreign Key References [dbo].[BookCopies]([ISBN]),
@@ -181,17 +190,8 @@ create table db_Library.dbo.BorrowBookCopies(
 	[BorrowedDateTime] Datetime not null,
 	[DeadlineDateTime] datetime null,
 	[ReturnDateTime]datetime null,
+	[ReserveId] int null constraint [FK_BorrowBookCopies_ReserveBookCopies] foreign key References [dbo].[ReserveBookCopies]([ReserveId]),
 	Constraint [PK_BorrowBookCopies] Primary Key ([BorrowId])
-)
-
-create table db_Library.dbo.ReserveBookCopies(
-	[ReserveId] int not null Identity(1,1),
-	[ISBN] varchar(100) not null Constraint [FK_ReserveBookCopies_BookCopies] Foreign Key References [dbo].[BookCopies]([ISBN]),
-	[StaffId] int not null constraint [FK_ReserveBookCopies_Staffs] foreign key References [dbo].[Staffs]([StaffId]),
-	[ReaderId] int not null constraint [FK_ReserveBookCopies_Readers] foreign key References [dbo].[Readers]([ReaderId]),
-	[ReserveDateTime] datetime not null,
-	[BorrowId] int null constraint [FK_ReserveBookCopies_BorrowBookCopies] foreign key References [dbo].[BorrowBookCopies]([BorrowId]),
-	Constraint [PK_ReserveBookCopies] Primary Key ([ReserveId])
 )
 
 create table db_Library.dbo.StaffHoldBookCopies(
